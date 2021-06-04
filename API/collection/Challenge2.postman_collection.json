@@ -1,0 +1,479 @@
+{
+	"info": {
+		"_postman_id": "fcf02240-ed25-407c-bc7d-fbdc8a22dce8",
+		"name": "Challenge2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "Create Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var rspnseJson = pm.response.json();\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate Amount\", function () {\r",
+									"    pm.expect(rspnseJson.payment.amount_money.amount).to.eql(pm.globals.get(\"r_Amount\")\r",
+									"    \r",
+									"    );\r",
+									"});\r",
+									"pm.test(\"Validate Currency\", function () {\r",
+									"     pm.expect(rspnseJson.payment.amount_money.currency).to.eql(pm.globals.get(\"c_Currency\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Less ammount Payment error\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"buyer_supplied_money can't be less than the total amount for the CreatePaymentRequest\");\r",
+									"});\r",
+									"pm.test(\"Partial Auth for cash error\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Accept partial authorization not valid for autocomplete payments.\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idempotency_key\": \"{{ideorder_key}}\",\r\n    \"reference_id\": \"test\",\r\n    \"amount_money\": {\r\n        \"amount\": {{r_Amount}},\r\n        \"currency\": \"USD\"\r\n    },\r\n\r\n    \"source_id\": \"CASH\",\r\n    \"accept_partial_authorization\": false,\r\n    \"cash_details\": {\r\n        \"buyer_supplied_money\": {\r\n            \"amount\": {{r_Amount}},\r\n            \"currency\": \"USD\"\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainUrl}}{{Payment_url}}",
+							"host": [
+								"{{MainUrl}}{{Payment_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Specific Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validate Payment ID\", function () {\r",
+									"    var pay_id = pm.response.json();\r",
+									"    pm.expect(pay_id.payment.id).to.eql(pm.variables.get(\"Payment_ID\"));});\r",
+									"\r",
+									"pm.test(\"Payment not found\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Could not find payment with id\");});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"Payment_ID\", \"PPKbyZ6zxiOqZvnyD2BybOvAlzBZY\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainUrl}}{{Payment_url}}{{Payment_ID}}/",
+							"host": [
+								"{{MainUrl}}{{Payment_url}}{{Payment_ID}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Payments",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainUrl}}{{Payment_url}}",
+							"host": [
+								"{{MainUrl}}{{Payment_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Payment",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.globals.set(\"Payment_ID\", \"PPKbyZ6zxiOqZvnyD2BybOvAlzBZY\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validate total amount\", function () {\r",
+									"    var Upaydata = pm.response.json();\r",
+									"    pm.expect(Upaydata.payment.total_money.amount).to.eql((Upaydata.payment.amount_money.amount)+(Upaydata.payment.tip_money.amount));\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idempotency_key\": \"{{ideorder_key}}\",\r\n    \"payment\": {\r\n      \"amount_money\": {\r\n        \"amount\": 100,\r\n        \"currency\": \"USD\"\r\n      },\r\n      \"tip_money\": {\r\n        \"amount\": 10,\r\n        \"currency\": \"USD\"\r\n      }\r\n    }\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainUrl}}{{Payment_url}}{{Payment_ID}}",
+							"host": [
+								"{{MainUrl}}{{Payment_url}}{{Payment_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel a Payment by payment ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Unable to cancel completed payments\", function () {\r",
+									"      var error_payID = ((\"Could not find payment with id: \")+(pm.globals.get(\"Payment_ID\")));\r",
+									"    pm.expect(pm.response.text()).to.include(error_payID);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"Payment_ID\", \"PPKAlzBZY\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{MainUrl}}{{Payment_url}}{{Payment_ID}}{{cancel_order_url}}",
+							"host": [
+								"{{MainUrl}}{{Payment_url}}{{Payment_ID}}{{cancel_order_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Complete a Payment",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"Payment_ID\", \"12madfOLbSVBNgpvUnRHZVnfIIeZY\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainUrl}}{{Payment_url}}{{Payment_ID}}{{complete_order_url}}",
+							"host": [
+								"{{MainUrl}}{{Payment_url}}{{Payment_ID}}{{complete_order_url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Refound",
+			"item": [
+				{
+					"name": "Refund a Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var RefundResponse = pm.response.json();\r",
+									"var RefDate = RefundResponse.refund.created_at;\r",
+									"var subRefDate = RefDate.substring(0,10);\r",
+									"\r",
+									"pm.test(\"Validate date\", function () {\r",
+									"    pm.expect(subRefDate).to.eql(pm.variables.get(\"today\"))\r",
+									"});\r",
+									"\r",
+									"pm.test(\"amout to hig error\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"AMOUNT_TOO_HIGH\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"Payment_ID\", \"12madfOLbSVBNgpvUnRHZVnfIIeZY\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount_money\": {\r\n      \"amount\": 1,\r\n      \"currency\": \"USD\"\r\n    },\r\n    \"idempotency_key\": \"0ae26ca7-3f23-4680-99b7-ff8{{ideorder_key}}\",\r\n    \"payment_id\": \"{{Payment_ID}}\",\r\n    \"reason\": \"bad\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainUrl}}{{Refud_url}}",
+							"host": [
+								"{{MainUrl}}{{Refud_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payment Refund",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"Refund_ID\", \"R8iu7zYUVCH33Kynyg9CV0cqrSJZY_7ESNNpnGuQbrtcArGBYqhFMl21Abqgz4MyoEOjsZPeb\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Not foud\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Could not find refund with id\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainUrl}}{{Refud_url}}{{Refund_ID}}",
+							"host": [
+								"{{MainUrl}}{{Refud_url}}{{Refund_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Payment Refund",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainUrl}}{{Refud_url}}",
+							"host": [
+								"{{MainUrl}}{{Refud_url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{ApiToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.environment.set('ideorder_key',_.random(000000,99999));",
+					"pm.globals.set('r_Amount',_.random(0001,9999));",
+					"pm.globals.set(\"c_Currency\", \"USD\");",
+					"",
+					"const moment = require(\"moment\");",
+					"pm.globals.set(\"today\", moment().format(\"YYYY-MM-DD\"));",
+					" moment.utc"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"transaction completed\", function () {",
+					"    pm.response.to.have.status(200);",
+					"});",
+					"pm.test(\"Response time is to high\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(500);",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ideorder_key",
+			"value": ""
+		}
+	]
+}

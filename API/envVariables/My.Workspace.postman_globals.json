@@ -1,0 +1,69 @@
+{
+	"id": "146e52f0-fd32-4814-8e58-8a3c0f4d5eb7",
+	"values": [
+		{
+			"key": "Payment_ID",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "c_Currency",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "r_Amount",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "Refund_ID",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "today",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "Refound_ID",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "MainUrl",
+			"value": "https://connect.squareupsandbox.com",
+			"enabled": true
+		},
+		{
+			"key": "ApiToken",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "Payment_url",
+			"value": "/v2/payments/",
+			"enabled": true
+		},
+		{
+			"key": "complete_order_url",
+			"value": "/complete \\",
+			"enabled": true
+		},
+		{
+			"key": "cancel_order_url",
+			"value": "/cancel\\",
+			"enabled": true
+		},
+		{
+			"key": "Refud_url",
+			"value": "/v2/refunds/",
+			"enabled": true
+		}
+	],
+	"name": "My Workspace Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2021-06-04T03:44:38.445Z",
+	"_postman_exported_using": "Postman/8.5.1"
+}

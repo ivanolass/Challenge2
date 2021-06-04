@@ -1,0 +1,63 @@
+#Challenge2 Test - Ivan Gomez
+
+This repository stores backend test cases for squareup.com page, the main folder contains the structure of the project
+
+##CONTENT
+1.1 STRUCTURE
+1.2 PRECONDITIONS 
+1.3 ENVIROMENT SETUP
+1.4 VARIABLES
+1.5 TEST EXECUTION
+--------------------------------------------
+1.1 STRUCTURE
+The structure ins te below
+Main folder
+	  ->collection -> contain the file Constants.json for the collectin of test
+	  ->envVariables -> Contains the files .json for the variables
+	  ->reports -> contains the html reports from newman
+----------------------------------------------
+1.2 PRECONDITIONS
+	The preconditions are have installed a IDE (you can choose your prefered), Node.js and Artilley, you can follow the blow links
+	
+	IDE:
+		Visual Studio:
+			https://code.visualstudio.com/
+		Atom:	
+			https://ide.atom.io/
+	NODE.js:
+	https://wsvincent.com/install-node-js-npm-windows/
+    
+    Postman	  
+-----------------------------------------------
+1.3 ENVIROMENT SETUP
+	Create a new folder where the files will be store.
+	Move the downloaded files to the folder
+	Open the prefered IDE and open the folder previusly created
+	Open the IDE Terminal for the next installations
+
+	1.3.1 Install the Package:
+		Using the command line in the terminal, navigate with 'cd' to the folder and rune the next command to install
+		npm init
+	
+	1.3.2 Install newman
+		Using the terminal run the mext command
+		npm install --save-dev newman
+		
+	1.3.3 Install newman reporter html
+		Using the terminal run the mext command
+		npm install --save-dev newman-reporter-htmlextra
+------------------------------------------------------
+1.4 VARIABLES
+    Variables are already setted in the file but the most important are
+    envVariables/My.Workspace.postman_globals.json
+        MainUrl - main url
+        ApiToken - the token user, this need to be replaced by the one from the user
+------------------------------------------------------
+1.5 TEST EXECUTION
+To run the test without the reports in html run the next command
+    npx newman run ../api/collection/Challenge2.postman_collection.json -e ../api/envVariables/My.Workspace.postman_globals.json
+
+To run the test with the html generation run the below command 
+npx newman run ../api/collection/Challenge2.postman_collection.json -e ../api/envVariables/My.Workspace.postman_globals.json -r htmlextra --reporter-htmlextra-export ../api/reports
+
+
